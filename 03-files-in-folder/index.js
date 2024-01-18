@@ -11,11 +11,11 @@ const path = require('node:path');
     files.forEach(async (file) => {
       const currentFilePath = path.join(dir, file.name);
 
-      const size = ((await fs.stat(currentFilePath)).size / 1024).toFixed(3);
+      const size = (await fs.stat(currentFilePath)).size;
       const ext = path.extname(currentFilePath);
       const name = path.basename(currentFilePath, ext);
 
-      console.log(`${name} - ${ext.slice(1)} - ${size}kB`);
+      console.log(`${name} - ${ext.slice(1)} - ${size}bytes`);
     });
   } catch ({ message }) {
     console.log(message);
