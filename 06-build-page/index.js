@@ -62,6 +62,48 @@ const htmlDest = path.join(__dirname, 'project-dist', 'index.html');
   });
 })('.html');
 
+(async function bundlerCss(ext, src) {
+  const ws = fs.createWriteStream(
+    path.join(__dirname, 'project-dist', 'style.css'),
+  );
+
+  const srcPath = path.join(__dirname, src);
+
+  const files = (
+    await fs.promises.readdir(srcPath, { withFileTypes: true })
+  ).filter((file) => path.extname(path.join(srcPath, file.name)) === `.${ext}`);
+  files.forEach((file) => {
+    const rs = fs.createReadStream(path.join(srcPath, file.name), 'utf-8');
+    rs.pipe(ws);
+  });
+})('css', 'styles');
+
+async function copyDir(src, dest) {
+  const newFolderPath = path.join(__dirname, 'project-dist', dest);
+  const dir = path.join(__dirname, src);
+
+  await fss.mkdir(newFolderPath, { recursive: true });
+
+  const filesAndFolders = await fss.readdir(dir, { withFileTypes: true });
+  filesAndFolders.forEach(async (el) => {
+    if (el.isFile())
+      await fss.copyFile(
+        path.join(dir, el.name),
+        path.join(newFolderPath, el.name),
+      );
+    else await copyDir(path.join(src, el.name), path.join(dest, el.name));
+  });
+}
+
+(async function copy(source, destination) {
+  await fss.rm(path.join(__dirname, 'project-dist', destination), {
+    recursive: true,
+    force: true,
+  });
+
+  await copyDir(source, destination);
+})('assets', 'assets');
+
 async function insertHtmlComponent(str, htmlFiles, ext) {
   const htmlFile = htmlFiles.find((file) => file.replace(ext, '') === str);
   return await fss.readFile(path.join(htmlSrc, htmlFile), 'utf-8');
