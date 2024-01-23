@@ -13,6 +13,6 @@ consoleIn.on('data', (chank) => {
     exit();
   }
 });
-process.on('SIGINT', exit);
+process.on('SIGINT', () => exit());
 
 consoleIn.pipe(writeStream);
