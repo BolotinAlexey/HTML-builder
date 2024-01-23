@@ -1,5 +1,5 @@
-const fs = require('node:fs/promises');
-const path = require('node:path');
+const fs = require('fs/promises');
+const path = require('path');
 
 async function copyDir(src, dest) {
   const newFolderPath = path.join(__dirname, dest);

@@ -1,7 +1,7 @@
-const fs = require('node:fs');
+const fs = require('fs');
 const fss = fs.promises;
-const path = require('node:path');
-const { Transform, pipeline } = require('node:stream');
+const path = require('path');
+const { Transform, pipeline } = require('stream');
 
 const htmlSrc = path.join(__dirname, 'components');
 const htmlTemplate = path.join(__dirname, 'template.html');
